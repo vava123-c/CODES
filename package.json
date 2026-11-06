@@ -1,0 +1,41 @@
+{
+  "name": "codes",
+  "productName": "Codes",
+  "version": "0.2.0",
+  "description": "Codes 0.2 - Lightweight desktop IDE for JavaScript, HTML and CSS",
+  "main": "src/main.js",
+  "private": true,
+  "license": "MIT",
+  "author": "Codes",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "selftest": "electron . --selftest",
+    "check": "node --experimental-vm-modules scripts/check-syntax.mjs",
+    "setup": "node scripts/generate-import-map.mjs && node scripts/sync-csp.mjs",
+    "zip": "node scripts/make-zip.mjs"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.18.6",
+    "@codemirror/commands": "^6.8.1",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.9",
+    "@codemirror/lang-javascript": "^6.2.4",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/language": "^6.11.0",
+    "@codemirror/lint": "^6.8.5",
+    "@codemirror/search": "^6.5.10",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.5",
+    "codemirror": "^6.0.1",
+    "crelt": "^1.0.6",
+    "style-mod": "^4.1.2",
+    "w3c-keyname": "^2.2.8"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1"
+  },
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
+}

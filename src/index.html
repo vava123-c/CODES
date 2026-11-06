@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' app:; script-src 'self' app: 'sha256-3SnDUeucBLAOP1wHfUG/FbqPYr67pm+XLWPMHwacbW0='; style-src 'self' app: 'unsafe-inline'; img-src 'self' app: data:; font-src 'self' app: data:; connect-src 'self' app:;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codes</title>
+    <link rel="stylesheet" href="./styles.css" />
+
+    <!--
+      CodeMirror 6 is published as ESM with bare module specifiers, which a
+      browser cannot resolve on its own. The import map below points every
+      package at its ESM entry point inside node_modules.
+    -->
+    <script type="importmap">
+{
+    "imports": {
+      "@codemirror/autocomplete": "/node_modules/@codemirror/autocomplete/dist/index.js",
+      "@codemirror/commands": "/node_modules/@codemirror/commands/dist/index.js",
+      "@codemirror/lang-css": "/node_modules/@codemirror/lang-css/dist/index.js",
+      "@codemirror/lang-html": "/node_modules/@codemirror/lang-html/dist/index.js",
+      "@codemirror/lang-javascript": "/node_modules/@codemirror/lang-javascript/dist/index.js",
+      "@codemirror/lang-json": "/node_modules/@codemirror/lang-json/dist/index.js",
+      "@codemirror/language": "/node_modules/@codemirror/language/dist/index.js",
+      "@codemirror/search": "/node_modules/@codemirror/search/dist/index.js",
+      "@codemirror/state": "/node_modules/@codemirror/state/dist/index.js",
+      "@codemirror/streamparser": "/node_modules/@codemirror/streamparser/dist/index.js",
+      "@codemirror/view": "/node_modules/@codemirror/view/dist/index.js",
+      "@lezer/common": "/node_modules/@lezer/common/dist/index.js",
+      "@lezer/css": "/node_modules/@lezer/css/dist/index.js",
+      "@lezer/highlight": "/node_modules/@lezer/highlight/dist/index.js",
+      "@lezer/html": "/node_modules/@lezer/html/dist/index.js",
+      "@lezer/javascript": "/node_modules/@lezer/javascript/dist/index.js",
+      "@lezer/json": "/node_modules/@lezer/json/dist/index.js",
+      "@lezer/lr": "/node_modules/@lezer/lr/dist/index.js",
+      "@marijn/find-cluster-break": "/node_modules/@marijn/find-cluster-break/src/index.js",
+      "crelt": "/node_modules/crelt/index.js",
+      "style-mod": "/node_modules/style-mod/src/style-mod.js",
+      "w3c-keyname": "/node_modules/w3c-keyname/index.js"
+    }
+  }
+    </script>
+  </head>
+
+  <body>
+    <!-- Inline SVG icon set: no icon dependency, no network requests. -->
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <defs>
+        <symbol id="i-logo" viewBox="0 0 24 24">
+          <path
+            d="M13.5 3.2 4.8 12.6a.9.9 0 0 0 0 1.2l8.7 9.4a.9.9 0 0 0 1.5-.7V9.2l6.6-4.2a.9.9 0 0 0 0-1.6L15 3.2a.9.9 0 0 0-1.5 0Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="i-new-file" viewBox="0 0 16 16">
+          <path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5L9 1.5Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M9 1.5V5.5H13M10.5 8v4M8.5 10h4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-new-folder" viewBox="0 0 16 16">
+          <path d="M1.8 4.2c0-.66.54-1.2 1.2-1.2h3l1.4 1.6h5.4c.66 0 1.2.54 1.2 1.2v6c0 .66-.54 1.2-1.2 1.2H3c-.66 0-1.2-.54-1.2-1.2V4.2Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M10.5 8v3.5M8.75 9.75h3.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-refresh" viewBox="0 0 16 16">
+          <path d="M13.5 8a5.5 5.5 0 1 1-1.7-4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M13.6 1.6v3.2h-3.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-collapse" viewBox="0 0 16 16">
+          <path d="M4 6.5 8 3l4 3.5M4 9.5 8 13l4-3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-chevron" viewBox="0 0 16 16">
+          <path d="m6 4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-file" viewBox="0 0 16 16">
+          <path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5L9 1.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-file-js" viewBox="0 0 16 16">
+          <path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5L9 1.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+          <path d="M8 8.4c-.3-.3-.8-.5-1.2-.5-.7 0-1.2.4-1.2 1s.4.9 1.2 1.1c.8.2 1.3.5 1.3 1.1 0 .6-.5 1-1.3 1-.5 0-1-.2-1.3-.6" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-file-html" viewBox="0 0 16 16">
+          <path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5L9 1.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+          <path d="M4.8 11V8.4l1.3 1.5 1.3-1.5V11M9 11V8.4h1.4c.7 0 1.1.4 1.1.9 0 .3-.1.6-.4.8.3.1.5.5.5.9 0 .6-.5.9-1.2.9H9Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-file-css" viewBox="0 0 16 16">
+          <path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5L9 1.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+          <path d="M4.9 9.2c0-1 .7-1.7 1.7-1.7.6 0 1.1.2 1.4.6M4.9 12c.3.4.7.6 1.2.6.7 0 1.1-.4 1.1-.9 0-1.1-2.2-.4-2.2-1.8 0-.6.5-1 1.2-1 .4 0 .8.2 1 .5M9.4 9.2c.2-.4.6-.6 1-.6.8 0 1.3.7 1.3 1.7s-.5 1.7-1.3 1.7c-.5 0-.9-.3-1-.7M9.5 11.6h1.9" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-folder" viewBox="0 0 16 16">
+          <path d="M1.8 4.2c0-.66.54-1.2 1.2-1.2h3l1.4 1.6h5.4c.66 0 1.2.54 1.2 1.2v6c0 .66-.54 1.2-1.2 1.2H3c-.66 0-1.2-.54-1.2-1.2V4.2Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-folder-open" viewBox="0 0 16 16">
+          <path d="M1.8 12.8V4.2c0-.66.54-1.2 1.2-1.2h3l1.4 1.6h5.4c.66 0 1.2.54 1.2 1.2v1" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M2.2 12.8h11.4l1.4-5.2H4.1l-1.9 5.2Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-save" viewBox="0 0 16 16">
+          <path d="M2.5 3.5c0-.55.45-1 1-1h8l3 3v8c0 .55-.45 1-1 1h-10c-.55 0-1-.45-1-1v-10Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M5 2.5v4h5v-4M4.5 14v-4h7v4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-play" viewBox="0 0 16 16">
+          <path d="M4.5 2.8 13 8l-8.5 5.2V2.8Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-stop" viewBox="0 0 16 16">
+          <rect x="4" y="4" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        </symbol>
+        <symbol id="i-terminal" viewBox="0 0 16 16">
+          <rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="m4.6 6.4 2 1.8-2 1.8M8.4 10.4h3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-trash" viewBox="0 0 16 16">
+          <path d="M2.8 4.4h10.4M6.2 4.4V3.2c0-.44.36-.8.8-.8h2c.44 0 .8.36.8.8v1.2M12 4.4l-.5 8.4c-.03.55-.48.98-1.03.98H5.53c-.55 0-1-.43-1.03-.98L4 4.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-rename" viewBox="0 0 16 16">
+          <path d="m10.6 2.9 2.5 2.5M11.9 4.2 5.4 10.7 2.8 11.2l.5-2.6 6.5-6.5Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 16 16">
+          <path d="m4 4 8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 16 16">
+          <circle cx="7.2" cy="7.2" r="4.4" fill="none" stroke="currentColor" stroke-width="1.3"/>
+          <path d="m10.6 10.6 3 3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-preview" viewBox="0 0 16 16">
+          <rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M2.4 10.6 5.4 7.8l2.2 2 2.6-2.6 3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="5.6" r="1" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-minimize" viewBox="0 0 12 12">
+          <path d="M2 6h8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-maximize" viewBox="0 0 12 12">
+          <rect x="2.4" y="2.4" width="7.2" height="7.2" rx="1" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        </symbol>
+        <symbol id="i-restore" viewBox="0 0 12 12">
+          <rect x="2" y="4" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.1"/>
+          <path d="M4.4 4V3.4a1 1 0 0 1 1-1H9a1 1 0 0 1 1 1v3.6a1 1 0 0 1-1 1H8" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        </symbol>
+        <symbol id="i-warning" viewBox="0 0 16 16">
+          <path d="M8 2.4 14.4 13H1.6L8 2.4Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M8 6.4v3M8 11.2v.05" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-error" viewBox="0 0 16 16">
+          <circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 4.8v3.8M8 10.9v.05" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 16 16">
+          <circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M8 7.4v3.8M8 4.9v.05" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 16 16">
+          <path d="m3.5 8.4 3 3 6-6.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-add" viewBox="0 0 16 16">
+          <path d="M8 3.5v9M3.5 8h9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-folder-open-project" viewBox="0 0 24 24">
+          <path d="M2.6 19V6.4c0-1 .8-1.8 1.8-1.8h4.2l2 2.4h7.4c1 0 1.8.8 1.8 1.8v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M3 19h17l2.2-7.4H5.6L3 19Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-braces" viewBox="0 0 24 24">
+          <path d="M9 4H8a2 2 0 0 0-2 2v3.5a2 2 0 0 1-2 2 2 2 0 0 1 2 2V17a2 2 0 0 0 2 2h1M15 4h1a2 2 0 0 1 2 2v3.5a2 2 0 0 0 2 2 2 2 0 0 0-2 2V17a2 2 0 0 1-2 2h-1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-html" viewBox="0 0 24 24">
+          <path d="M8.6 6.6 3.4 12l5.2 5.4M15.4 6.6l5.2 5.4-5.2 5.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-css" viewBox="0 0 24 24">
+          <path d="M10 3.5 7.4 20.5M17 3.5l-2.6 17M4.2 9.2h15.6M3.6 14.8h15.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="app" id="app">
+      <!-- ── Title bar ─────────────────────────────────────────────── -->
+      <header class="titlebar">
+        <div class="titlebar__left">
+          <span class="brand">
+            <svg class="brand__mark"><use href="#i-logo" /></svg>
+            <span class="brand__name">Codes</span>
+            <span class="brand__version">0.2</span>
+          </span>
+          <nav class="menubar" id="menubar" aria-label="Main menu">
+            <button type="button" class="menubar__item" data-menu="project">Project</button>
+            <button type="button" class="menubar__item" data-menu="file">File</button>
+            <button type="button" class="menubar__item" data-menu="edit">Edit</button>
+            <button type="button" class="menubar__item" data-menu="run">Run</button>
+            <button type="button" class="menubar__item" data-menu="view">View</button>
+            <button type="button" class="menubar__item" data-menu="help">Help</button>
+          </nav>
+        </div>
+
+        <div class="titlebar__right">
+          <span class="titlebar__os" id="os-badge">Windows</span>
+          <div class="wincontrols">
+            <button type="button" class="wincontrols__btn" data-window="minimize" title="Minimize" aria-label="Minimize">
+              <svg><use href="#i-minimize" /></svg>
+            </button>
+            <button type="button" class="wincontrols__btn" data-window="maximize" title="Maximize" aria-label="Maximize">
+              <svg><use href="#i-maximize" /></svg>
+            </button>
+            <button type="button" class="wincontrols__btn wincontrols__btn--close" data-window="close" title="Close" aria-label="Close">
+              <svg><use href="#i-close" /></svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── Workbench ──────────────────────────────────────────────── -->
+      <div class="workbench">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar__header">
+            <span class="sidebar__title">Explorer</span>
+            <span class="sidebar__project" id="sidebar-project"></span>
+          </div>
+          <div class="sidebar__toolbar">
+            <button type="button" class="iconbtn" id="btn-new-file" title="New file" aria-label="New file">
+              <svg><use href="#i-new-file" /></svg>
+            </button>
+            <button type="button" class="iconbtn" id="btn-new-folder" title="New folder" aria-label="New folder">
+              <svg><use href="#i-new-folder" /></svg>
+            </button>
+            <button type="button" class="iconbtn" id="btn-refresh" title="Refresh explorer" aria-label="Refresh explorer">
+              <svg><use href="#i-refresh" /></svg>
+            </button>
+            <button type="button" class="iconbtn" id="btn-collapse" title="Collapse all" aria-label="Collapse all">
+              <svg><use href="#i-collapse" /></svg>
+            </button>
+          </div>
+          <div class="explorer" id="explorer" role="tree" aria-label="Project files"></div>
+        </aside>
+
+        <div class="splitter splitter--vertical" id="split-sidebar" role="separator" aria-orientation="vertical"></div>
+
+        <main class="main" id="main">
+          <div class="tabs" id="tabs">
+            <div class="tabs__list" id="tabs-list" role="tablist"></div>
+            <div class="tabs__actions">
+              <button type="button" class="iconbtn" id="btn-run" title="Run JavaScript file (F5)" aria-label="Run">
+                <svg><use href="#i-play" /></svg>
+              </button>
+              <button type="button" class="iconbtn" id="btn-save" title="Save (Ctrl+S)" aria-label="Save">
+                <svg><use href="#i-save" /></svg>
+              </button>
+              <button type="button" class="iconbtn" id="btn-preview" title="Preview HTML file" aria-label="Preview">
+                <svg><use href="#i-preview" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="editor-area" id="editor-area">
+            <div class="editor-host" id="editor-host"></div>
+
+            <div class="welcome" id="welcome">
+              <div class="welcome__inner">
+                <div class="welcome__logo">
+                  <svg class="welcome__mark"><use href="#i-logo" /></svg>
+                </div>
+                <h1 class="welcome__title">Codes</h1>
+                <p class="welcome__subtitle">Lightweight Development Environment</p>
+
+                <div class="welcome__actions">
+                  <button type="button" class="button button--primary" id="btn-open-project">
+                    <svg><use href="#i-folder-open-project" /></svg>
+                    <span>Open Project</span>
+                  </button>
+                </div>
+
+                <section class="welcome__section" id="welcome-recent-section">
+                  <h2 class="welcome__section-title">Recent Projects</h2>
+                  <ul class="welcome__list" id="welcome-recent"></ul>
+                </section>
+
+                <section class="welcome__section">
+                  <h2 class="welcome__section-title">Quick Start</h2>
+                  <div class="welcome__cards">
+                    <button type="button" class="quickcard" data-template="javascript">
+                      <svg class="quickcard__icon"><use href="#i-braces" /></svg>
+                      <span class="quickcard__title">JavaScript</span>
+                      <span class="quickcard__hint">Run with Node.js &mdash; F5</span>
+                    </button>
+                    <button type="button" class="quickcard" data-template="html">
+                      <svg class="quickcard__icon"><use href="#i-html" /></svg>
+                      <span class="quickcard__title">HTML</span>
+                      <span class="quickcard__hint">Preview in a live window</span>
+                    </button>
+                    <button type="button" class="quickcard" data-template="css">
+                      <svg class="quickcard__icon"><use href="#i-css" /></svg>
+                      <span class="quickcard__title">CSS</span>
+                      <span class="quickcard__hint">Autocomplete &amp; highlighting</span>
+                    </button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+
+          <div class="splitter splitter--horizontal" id="split-terminal" role="separator" aria-orientation="horizontal"></div>
+
+          <section class="panel" id="terminal-panel">
+            <header class="panel__header">
+              <div class="panel__tabs" id="terminal-tabs" role="tablist"></div>
+              <div class="panel__title">Terminal</div>
+              <div class="panel__actions">
+                <button type="button" class="iconbtn" id="btn-terminal-clear" title="Clear terminal" aria-label="Clear terminal">
+                  <svg><use href="#i-collapse" /></svg>
+                </button>
+                <button type="button" class="iconbtn" id="btn-terminal-stop" title="Stop running process" aria-label="Stop process">
+                  <svg><use href="#i-stop" /></svg>
+                </button>
+                <button type="button" class="iconbtn" id="btn-terminal-close" title="Hide terminal" aria-label="Hide terminal">
+                  <svg><use href="#i-close" /></svg>
+                </button>
+              </div>
+            </header>
+            <div class="terminal-host" id="terminal-host"></div>
+          </section>
+        </main>
+      </div>
+
+      <!-- ── Status bar ─────────────────────────────────────────────── -->
+      <footer class="statusbar">
+        <div class="statusbar__group">
+          <span class="status status--ready" id="status-message">Ready</span>
+          <span class="statusbar__sep"></span>
+          <span class="status" id="status-language">Plain Text</span>
+          <span class="statusbar__sep"></span>
+          <span class="status">UTF-8</span>
+          <span class="statusbar__sep"></span>
+          <span class="status" id="status-eol">LF</span>
+        </div>
+        <div class="statusbar__group statusbar__group--right">
+          <span class="status" id="status-position">Ln 1, Col 1</span>
+          <span class="statusbar__sep"></span>
+          <span class="status" id="status-selection"></span>
+          <span class="statusbar__sep"></span>
+          <span class="status" id="status-project">No Project</span>
+          <span class="statusbar__sep"></span>
+          <span class="status" id="status-shell">CMD</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ── Overlays ─────────────────────────────────────────────────── -->
+    <div class="palette" id="palette" hidden>
+      <div class="palette__box" role="dialog" aria-modal="true" aria-label="Command palette">
+        <div class="palette__input-wrap">
+          <svg class="palette__icon"><use href="#i-search" /></svg>
+          <input class="palette__input" id="palette-input" type="text" placeholder="Type a command…" autocomplete="off" spellcheck="false" />
+        </div>
+        <ul class="palette__list" id="palette-list" role="listbox"></ul>
+        <div class="palette__hint">
+          <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+          <span><kbd>Enter</kbd> run</span>
+          <span><kbd>Esc</kbd> close</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contextmenu" id="context-menu" hidden role="menu"></div>
+
+    <div class="modal" id="modal" hidden>
+      <div class="modal__backdrop" id="modal-backdrop"></div>
+      <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h2 class="modal__title" id="modal-title">Confirm</h2>
+        <p class="modal__message" id="modal-message"></p>
+        <input class="modal__input" id="modal-input" type="text" autocomplete="off" spellcheck="false" />
+        <div class="modal__actions">
+          <button type="button" class="button" id="modal-cancel">Cancel</button>
+          <button type="button" class="button button--primary" id="modal-confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <script type="module" src="./renderer.js"></script>
+  </body>
+</html>
